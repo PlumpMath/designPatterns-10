@@ -1,0 +1,42 @@
+http://howtodoinjava.com/design-patterns/creational/singleton-design-pattern-in-java/
+
+This type of implementation recommend the use of enum. Enum, as written in java docs, provide implicit support for thread safety and only one instance is guaranteed. This is also a good way to have singleton with minimum effort.
+
+public enum EnumSingleton {
+    INSTANCE;
+    public void someMethod(String param) {
+        // some class member
+    }
+}
+
+
+Adding readResolve()
+
+So, till now you must have taken your decision that how you would like to implement your singleton. Now lets see other problems that may arise even in interviews also.
+Lets say your application is distributed and it frequently serialize the objects in file system, only to read them later when required. Please note that, de-serialization always creates a new instance. Lets understand using an example:
+
+
+public class DemoSingleton implements Serializable {
+    private volatile static DemoSingleton instance = null;
+ 
+    public static DemoSingleton getInstance() {
+        if (instance == null) {
+            instance = new DemoSingleton();
+        }
+        return instance;
+    }
+ 
+    protected Object readResolve() {
+        return instance;
+    }
+ 
+    private int i = 10;
+ 
+    public int getI() {
+        return i;
+    }
+ 
+    public void setI(int i) {
+        this.i = i;
+    }
+}
